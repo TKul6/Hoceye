@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HocEye.Core", "HocEye.Core\HocEye.Core.csproj", "{BF9AA6AA-12A0-45BF-BC84-9C754861F33B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hoceye.Core.Tests", "Hoceye.Core.Tests\Hoceye.Core.Tests.csproj", "{B1C0774C-2E4A-4393-B9F8-4968A2010C4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF9AA6AA-12A0-45BF-BC84-9C754861F33B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9AA6AA-12A0-45BF-BC84-9C754861F33B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9AA6AA-12A0-45BF-BC84-9C754861F33B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9AA6AA-12A0-45BF-BC84-9C754861F33B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1C0774C-2E4A-4393-B9F8-4968A2010C4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1C0774C-2E4A-4393-B9F8-4968A2010C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1C0774C-2E4A-4393-B9F8-4968A2010C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1C0774C-2E4A-4393-B9F8-4968A2010C4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
