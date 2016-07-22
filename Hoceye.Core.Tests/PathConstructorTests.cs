@@ -21,40 +21,13 @@ namespace Hoceye.Core.Tests
             //Act
 
             var textNavigator = new Mock<ITextStructureNavigator>();
-
-            textNavigator.Setup(t => t.GetExtentOfWord(It.IsAny<SnapshotPoint>())).Returns((SnapshotPoint point) =>
-            {
-                var snapshot = point.Snapshot;
-
-             
-
-                var end = rawLine.LastIndexOf('.');
-                var start = rawLine.LastIndexOf('.', 0, end - 1);
-
-                var snapshotSpan = new SnapshotSpan(snapshot,start,end);
-                
-
-                var textExtent = new TextExtent(snapshotSpan, false);
-
-                return textExtent;
-                
-            });
-
             
-            
-
-
-
-            var textSnapshot = new Mock<ITextSnapshot>();
-
-            textSnapshot.SetupGet(snapshot => snapshot.Length).Returns(rawLine.Length);
-
             
             var constructor = new PathConstructor(textNavigator.Object);
 
             //Act
 
-            var pathResult = constructor.ConstructPathBackwards(textSnapshot.Object,excpectedPath.Length-3);
+            var pathResult = constructor.ConstructPathBackwards(rawLine,excpectedPath.Length-3);
 
             //Assert
 
