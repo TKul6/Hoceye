@@ -42,10 +42,7 @@ namespace HocEye.Core
         internal int AppendFirstWord(string line, int position, StringBuilder pathBuilder)
         {
             var endIndex = GetEndIndex(line, position);
-
-            //Todo: Handle end index  -1
-
-
+            
             var startIndex = Math.Max(0, line.LastIndexOf('.', position - 1, position - 1));
 
 
@@ -65,12 +62,10 @@ namespace HocEye.Core
             {
                 return wordEndPosition;
             }
-
             
-
-            return -1;
-            //TODO: test where standing on the last word in the path which any saparator followed as next character as a ELEMENT_SAPARATOR
-            //TODO: test where standing on the last word in the path
+            //Return the length because the last element consider to be invalid (End of line or an ELEMENT_SEPARATOR)
+            return line.Length;
+            
 
         }
 

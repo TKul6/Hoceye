@@ -40,6 +40,8 @@ namespace Hoceye.Core.Tests
         [Test(Description = "Validate getting the first name in the path")]
         [TestCase("application.prod.resources.mongo.connection",28,"mongo")]
         [TestCase("application.prod.resources.mongo.connection{", 40,"connection")]
+        [TestCase("application.prod.resources.mongo.connection:", 40, "connection")]
+        [TestCase("application.prod.resources.mongo.connection", 40, "connection")]
         public void When_Getting_First_Element(string expression,int position,string expectedResult)
         {
 
