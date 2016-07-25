@@ -16,20 +16,20 @@ namespace Hoceye.Core.Tests
     {
         [Ignore("Unignore when the When_Getting_First_Element tests are completed")]
         [Test(Description = "Validate simple path construction, when the all the path elements exist in the same line")]
-        [TestCase("application.prod.resources.mongo.connection",",application.prod.resources.mongo")]
+        [TestCase("application.prod.resources.mongo.connection", ",application.prod.resources.mongo")]
         public void When_Constucting_Elment_Path(string rawLine, string excpectedPath)
         {
             //Act
 
             var textNavigator = new Mock<ITextStructureNavigator>();
-            
-            
+
+
             var constructor = new PathConstructor();
-            
+
 
             //Act
 
-            var pathResult = constructor.ConstructPathBackwards(rawLine,excpectedPath.Length-3);
+            var pathResult = constructor.ConstructPathBackwards(rawLine, excpectedPath.Length - 3);
 
             //Assert
 
@@ -38,18 +38,19 @@ namespace Hoceye.Core.Tests
         }
 
         [Test(Description = "Validate getting the first name in the path")]
-        [TestCase("application.prod.resources.mongo.connection",28,"mongo")]
-        [TestCase("application.prod.resources.mongo.connection{", 40,"connection")]
+        [TestCase("application.prod.resources.mongo.connection", 28, "mongo")]  
+        [TestCase("application.prod.resources.mongo.connection{", 40, "connection")]
         [TestCase("application.prod.resources.mongo.connection:", 40, "connection")]
         [TestCase("application.prod.resources.mongo.connection", 40, "connection")]
         [TestCase("application.prod.resources.mongo.connection", 5, "application")]
-        public void When_Getting_First_Element(string expression,int position,string expectedResult)
+        [TestCase("{application.prod.resources.mongo.connection", 5, "application")]
+        public void When_Getting_First_Element(string expression, int position, string expectedResult)
         {
 
             var constructor = new PathConstructor();
 
 
-           var builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             //Act
 
@@ -57,11 +58,11 @@ namespace Hoceye.Core.Tests
 
             //Assert
 
-            var expectedNewPosition = Math.Max(expression.LastIndexOf('.', position - 1) -1,0);
+            var expectedNewPosition = Math.Max(expression.LastIndexOf('.', position - 1) - 1, 0);
 
             Assert.That(newPosition, Is.EqualTo(expectedNewPosition));
 
-            Assert.That(builder.ToString(),Is.EqualTo(expectedResult));
+            Assert.That(builder.ToString(), Is.EqualTo(expectedResult));
         }
     }
 }

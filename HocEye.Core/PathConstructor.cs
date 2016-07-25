@@ -43,7 +43,7 @@ namespace HocEye.Core
         {
             var endIndex = GetEndIndex(line, position);
             
-            var startIndex =  line.LastIndexOf('.', position - 1, position - 1) + 1;
+            var startIndex =  line.LastIndexOfAny(ELEMENTS_SAPARATORS, position - 1, position) + 1;
 
 
             //Todo: can optimize by iterating the string and add the characters to the builder instead of creating another string and call to substract.
