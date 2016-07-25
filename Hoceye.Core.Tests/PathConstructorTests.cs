@@ -39,6 +39,7 @@ namespace Hoceye.Core.Tests
 
         [Test(Description = "Validate getting the first name in the path")]
         [TestCase("application.prod.resources.mongo.connection",28)]
+        [TestCase("application.prod.resources.mongo.connection", 42)]
         public void When_Getting_First_Element(string expression,int position)
         {
 
@@ -53,9 +54,9 @@ namespace Hoceye.Core.Tests
 
             //Assert
 
-            var expectedNewPosition = expression.LastIndexOf('.', position - 1);
+            var expectedNewPosition = expression.LastIndexOf('.', position - 1) -1;
 
-            Assert.That(newPosition, Is.EqualTo(25));
+            Assert.That(newPosition, Is.EqualTo(expectedNewPosition));
 
             Assert.That(builder.ToString(),Is.EqualTo("mongo"));
         }
