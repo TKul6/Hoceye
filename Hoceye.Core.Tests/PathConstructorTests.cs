@@ -42,6 +42,7 @@ namespace Hoceye.Core.Tests
         [TestCase("application.prod.resources.mongo.connection{", 40,"connection")]
         [TestCase("application.prod.resources.mongo.connection:", 40, "connection")]
         [TestCase("application.prod.resources.mongo.connection", 40, "connection")]
+        [TestCase("application.prod.resources.mongo.connection", 5, "application")]
         public void When_Getting_First_Element(string expression,int position,string expectedResult)
         {
 
@@ -56,7 +57,7 @@ namespace Hoceye.Core.Tests
 
             //Assert
 
-            var expectedNewPosition = expression.LastIndexOf('.', position - 1) -1;
+            var expectedNewPosition = Math.Max(expression.LastIndexOf('.', position - 1) -1,0);
 
             Assert.That(newPosition, Is.EqualTo(expectedNewPosition));
 

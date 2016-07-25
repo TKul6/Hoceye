@@ -43,15 +43,14 @@ namespace HocEye.Core
         {
             var endIndex = GetEndIndex(line, position);
             
-            var startIndex = Math.Max(0, line.LastIndexOf('.', position - 1, position - 1));
+            var startIndex =  line.LastIndexOf('.', position - 1, position - 1) + 1;
 
 
             //Todo: can optimize by iterating the string and add the characters to the builder instead of creating another string and call to substract.
-            var word = line.Substring(startIndex +1 , endIndex-startIndex -1);
-            pathBuilder.Append(word);
+            pathBuilder.Append(line.Substring(startIndex, endIndex - startIndex +1));
 
-            //The start index represent a dot, which should be skipped
-            return startIndex -1;
+            //The start index represent the first letter in the word, which should be skipped as well as the ELEMENT_AEPARATOR if exists
+            return Math.Max(0,startIndex -2);
         }
 
         private int GetEndIndex(string line, int position)
@@ -60,11 +59,10 @@ namespace HocEye.Core
 
             if (wordEndPosition > 0)
             {
-                return wordEndPosition;
+                return wordEndPosition -1;
             }
             
-            //Return the length because the last element consider to be invalid (End of line or an ELEMENT_SEPARATOR)
-            return line.Length;
+            return line.Length -1;
             
 
         }
