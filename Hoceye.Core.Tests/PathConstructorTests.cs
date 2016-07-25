@@ -38,9 +38,9 @@ namespace Hoceye.Core.Tests
         }
 
         [Test(Description = "Validate getting the first name in the path")]
-        [TestCase("application.prod.resources.mongo.connection",28)]
-        [TestCase("application.prod.resources.mongo.connection", 42)]
-        public void When_Getting_First_Element(string expression,int position)
+        [TestCase("application.prod.resources.mongo.connection",28,"mongo")]
+        [TestCase("application.prod.resources.mongo.connection{", 40,"connection")]
+        public void When_Getting_First_Element(string expression,int position,string expectedResult)
         {
 
             var constructor = new PathConstructor();
@@ -58,7 +58,7 @@ namespace Hoceye.Core.Tests
 
             Assert.That(newPosition, Is.EqualTo(expectedNewPosition));
 
-            Assert.That(builder.ToString(),Is.EqualTo("mongo"));
+            Assert.That(builder.ToString(),Is.EqualTo(expectedResult));
         }
     }
 }

@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Text;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Operations;
 
 namespace HocEye.Core
 {
     public class PathConstructor
     {
 
+        private readonly char[] PATH_SAPARATORS;
+
+        private readonly char[] ELEMENTS_SAPARATORS;
+
+
+        public PathConstructor()
+        {
+            PATH_SAPARATORS = new[] {':', '{', '}', '='};
+
+            ELEMENTS_SAPARATORS = new[] { ':', '{', '}', '=','.' };
+        }
 
         public string ConstructPathBackwards(string line, int position)
         {
@@ -50,16 +59,19 @@ namespace HocEye.Core
 
         private int GetEndIndex(string line, int position)
         {
-            var wordEndPosition = line.LastIndexOf('.', line.Length - 1, line.Length - 1 - position);
+            var wordEndPosition = line.IndexOfAny(ELEMENTS_SAPARATORS,position);
 
             if (wordEndPosition > 0)
             {
                 return wordEndPosition;
             }
 
+            
+
             return -1;
-            //TODO: test where standing on th last word in the path
-            //TODO: test where standing on th last word in the path which any saparator followed as next character
+            //TODO: test where standing on the last word in the path which any saparator followed as next character as a ELEMENT_SAPARATOR
+            //TODO: test where standing on the last word in the path
+
         }
 
         private string InnerConstructPathBackwards(string line, int position, StringBuilder builder)
