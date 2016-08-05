@@ -57,6 +57,13 @@ namespace HocEye.Core
             var startIndex = line.LastIndexOfAny(ELEMENTS_SAPARATORS, position - 1, position) + 1;
 
 
+            if (startIndex == endIndex)
+            {
+                //Enter this condition when having 2 element saperators one after the other
+
+                return string.Empty;
+            }
+
             //Todo: can optimize by iterating the string and add the characters to the pathBuilder instead of creating another string and call to substract.
             var word = line.Substring(startIndex, endIndex - startIndex + 1);
             
