@@ -23,6 +23,7 @@ namespace Hoceye.Core.Tests
         [TestCase("application.prod.resources.mongo.connection", "application",5)]
         [TestCase("{application.prod.resources.mongo.connection", "application", 5)]
         [TestCase("..............", "",5)]
+        [TestCase("}", "", 0)]
         public void When_Constucting_Elment_Path(string rawLine, string excpectedPath, int position)
         {
             //Act
