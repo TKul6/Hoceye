@@ -16,12 +16,11 @@ namespace Hoceye.Core.Tests
     {
      
         [Test(Description = "Validate simple path construction, when the all the path elements exist in the same line")]
-        [TestCase("application.prod.resources.mongo.connection", ",application.prod.resources.mongo")]
+        [TestCase("application.prod.resources.mongo.connection", "application.prod.resources.mongo")]
         public void When_Constucting_Elment_Path(string rawLine, string excpectedPath)
         {
             //Act
             
-
             var constructor = new PathConstructor();
 
 

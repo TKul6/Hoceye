@@ -36,7 +36,7 @@ namespace HocEye.Core
 
                 pathBuilder.Append(word);
 
-                position = endIndex - word.Length;
+                position = endIndex - word.Length -1; //going before the (.) char as well
 
             }
             
@@ -88,7 +88,7 @@ namespace HocEye.Core
         private string InnerConstructPathBackwards(string line, int position, StringBuilder pathBuilder)
         {
 
-            if (position == 0)
+            if (position <= 0)
             {
                 return pathBuilder.ToString();
             }
@@ -97,7 +97,8 @@ namespace HocEye.Core
 
             if (!String.IsNullOrEmpty(word))
             {
-                var nextPosition = Math.Max(position - word.Length - 2, 0);
+                var nextPosition = Math.Max(position - word.Length - 1, 0);
+                
                 pathBuilder.Insert(0, $"{word}.");
 
 
