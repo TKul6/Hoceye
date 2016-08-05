@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Microsoft.VisualStudio.Text.Differencing;
 
 namespace HocEye.Core
 {
@@ -13,9 +14,9 @@ namespace HocEye.Core
 
         public PathConstructor()
         {
-            PATH_SAPARATORS = new[] {':', '{', '}', '='};
+            PATH_SAPARATORS = new[] { ':', '{', '}', '=' };
 
-            ELEMENTS_SAPARATORS = new[] { ':', '{', '}', '=','.' };
+            ELEMENTS_SAPARATORS = new[] { ':', '{', '}', '=', '.' };
         }
 
         public string ConstructPathBackwards(string line, int position)
@@ -30,77 +31,83 @@ namespace HocEye.Core
 
             if (char.IsLetterOrDigit(line[position]))
             {
-                position = AppendFirstWord(line, position, pathBuilder);
+                var endIndex = GetEndIndex(line,position);
+                var word  = GetWord(line, position,endIndex);
+
+                pathBuilder.Append(word);
+
+                position = endIndex - word.Length;
+
             }
-
-
+            
             return InnerConstructPathBackwards(line, position, pathBuilder);
-
-
+            
         }
 
-        internal int AppendFirstWord(string line, int position, StringBuilder pathBuilder)
+     
+
+        internal string GetWord(string line, int position,int endIndex)
         {
-            var endIndex = GetEndIndex(line, position);
+
+            if (endIndex <= 0)
+            {
+                return string.Empty;
+            }
             
-            var startIndex =  line.LastIndexOfAny(ELEMENTS_SAPARATORS, position - 1, position) + 1;
+            var startIndex = line.LastIndexOfAny(ELEMENTS_SAPARATORS, position - 1, position) + 1;
 
 
-            //Todo: can optimize by iterating the string and add the characters to the builder instead of creating another string and call to substract.
-            pathBuilder.Append(line.Substring(startIndex, endIndex - startIndex +1));
-
+            //Todo: can optimize by iterating the string and add the characters to the pathBuilder instead of creating another string and call to substract.
+            var word = line.Substring(startIndex, endIndex - startIndex + 1);
+            
             //The start index represent the first letter in the word, which should be skipped as well as the ELEMENT_AEPARATOR if exists
-            return Math.Max(0,startIndex -2);
+            return word;
         }
 
         private int GetEndIndex(string line, int position)
         {
-            var wordEndPosition = line.IndexOfAny(ELEMENTS_SAPARATORS,position);
+            var wordEndPosition = line.IndexOfAny(ELEMENTS_SAPARATORS, position);
 
             if (wordEndPosition > 0)
             {
-                return wordEndPosition -1;
+                return wordEndPosition - 1;
             }
-            
-            return line.Length -1;
-            
+
+            return line.Length - 1;
+
 
         }
 
-        private string InnerConstructPathBackwards(string line, int position, StringBuilder builder)
+        internal string GetWord(string line, int position)
+        {
+            var endIndex = GetEndIndex(line, position);
+
+            return GetWord(line, position, endIndex);
+        }
+
+        private string InnerConstructPathBackwards(string line, int position, StringBuilder pathBuilder)
         {
 
-            var previousDotLocation = line.LastIndexOf('.', position - 1);
-
-
-            if (previousDotLocation < 0)
+            if (position == 0)
             {
-                return builder.ToString();
+                return pathBuilder.ToString();
             }
-            var extentWord = line.Substring(previousDotLocation, position - previousDotLocation);
 
-            builder.Insert(0, ".");
-            builder.Insert(0, extentWord);
+            var word = GetWord(line, position,position);
 
-            return InnerConstructPathBackwards(line, previousDotLocation, builder);
+            if (!String.IsNullOrEmpty(word))
+            {
+                var nextPosition = Math.Max(position - word.Length - 2, 0);
+                pathBuilder.Insert(0, $"{word}.");
 
 
+                //Todo: handle where just '}' left    
+                return InnerConstructPathBackwards(line,nextPosition,pathBuilder);
+            }
 
-            //TextExtent currentNameSnapshot = _textNavigator.GetExtentOfWord(new SnapshotPoint(currentSnapshot, position));
-
-            //builder.Insert(0, currentNameSnapshot.Span.GetText());
-
-            //var nextPosition = currentNameSnapshot.Span.Start.Position - 2;
-
-            //if (nextPosition > 0)
-            //{
-            //    builder.Insert(0, ".");
-
-            //    InnerConstructPathBackwards(currentSnapshot, nextPosition, builder);
-            //}
-
-            //return builder.ToString();
-
+            return pathBuilder.ToString();
+            
+            
         }
     }
 }

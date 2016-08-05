@@ -14,15 +14,13 @@ namespace Hoceye.Core.Tests
     [TestFixture(Author = "Tomer K", Category = "Hoceye.Core")]
     public class PathConstructorTests
     {
-        [Ignore("Unignore when the When_Getting_First_Element tests are completed")]
+     
         [Test(Description = "Validate simple path construction, when the all the path elements exist in the same line")]
         [TestCase("application.prod.resources.mongo.connection", ",application.prod.resources.mongo")]
         public void When_Constucting_Elment_Path(string rawLine, string excpectedPath)
         {
             //Act
-
-            var textNavigator = new Mock<ITextStructureNavigator>();
-
+            
 
             var constructor = new PathConstructor();
 
@@ -44,25 +42,19 @@ namespace Hoceye.Core.Tests
         [TestCase("application.prod.resources.mongo.connection", 40, "connection")]
         [TestCase("application.prod.resources.mongo.connection", 5, "application")]
         [TestCase("{application.prod.resources.mongo.connection", 5, "application")]
+        [TestCase("..............", 5, "")]
         public void When_Getting_First_Element(string expression, int position, string expectedResult)
         {
 
             var constructor = new PathConstructor();
-
-
-            var builder = new StringBuilder();
-
+            
             //Act
-
-            var newPosition = constructor.AppendFirstWord(expression, position, builder);
+            
+            var result = constructor.GetWord(expression, position);
 
             //Assert
 
-            var expectedNewPosition = Math.Max(expression.LastIndexOf('.', position - 1) - 1, 0);
-
-            Assert.That(newPosition, Is.EqualTo(expectedNewPosition));
-
-            Assert.That(builder.ToString(), Is.EqualTo(expectedResult));
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
     }
 }
