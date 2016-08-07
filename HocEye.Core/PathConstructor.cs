@@ -26,7 +26,7 @@ namespace HocEye.Core
             //TODO: Handle quation mark as single varalable
             //Todo: Ignore white spaces
 
-
+            line = line.Trim();
             pathBuilder = new StringBuilder(line.Length);
 
             if (char.IsLetterOrDigit(line[position]))
