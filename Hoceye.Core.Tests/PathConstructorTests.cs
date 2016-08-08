@@ -30,11 +30,12 @@ namespace Hoceye.Core.Tests
             //Act
             
             var constructor = new PathConstructor();
-
-
+            
             //Act
 
-            var pathResult = constructor.ConstructPathBackwards(rawLine, position);
+            var lines = new[] {rawLine};
+
+            var pathResult = constructor.ConstructPathBackwards(lines.Reverse().GetEnumerator(), position);
 
             //Assert
 
@@ -62,6 +63,24 @@ namespace Hoceye.Core.Tests
             //Assert
 
             Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [Ignore("will be unignored after I'll fix the other tests")]
+        [Test(Description = "Verify the PathConstructor can handle multiline path")]
+ 
+        public void When_Construting_Multiline_Path(IEnumerator<string> lines, int position, string expectedResult)
+        {
+        //    //Act
+
+        //    var constructor = new PathConstructor();
+
+        //    //Act
+
+        //    var pathResult = constructor.ConstructPathBackwards(rawLine, position);
+
+        //    //Assert
+
+        //    Assert.That(pathResult, Is.EqualTo(excpectedPath));
         }
     }
 }

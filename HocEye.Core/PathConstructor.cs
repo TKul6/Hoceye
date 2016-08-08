@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.Text.Differencing;
 
@@ -11,22 +13,33 @@ namespace HocEye.Core
 
         private readonly char[] ELEMENTS_SAPARATORS;
 
+        private readonly char[] VALUE_INDICATORS;
+
 
         public PathConstructor()
         {
-            PATH_SAPARATORS = new[] { ':', '{', '}', '=' };
+            PATH_SAPARATORS = new[] { '{', '}', };
 
-            ELEMENTS_SAPARATORS = new[] { ':', '{', '}', '=', '.' };
+            ELEMENTS_SAPARATORS = new[] { ':', '{', '}', '=', '.',' ' };
+
+            VALUE_INDICATORS = new[] {':', '='};
         }
 
-        public string ConstructPathBackwards(string line, int position)
+        public string ConstructPathBackwards(IEnumerator<string> lines, int position)
         {
             StringBuilder pathBuilder;
 
             //TODO: Handle quation mark as single varalable
             //Todo: Ignore white spaces
 
-            line = line.Trim();
+
+            var line = GetCurrentLine(lines);
+
+            if (String.IsNullOrEmpty(line))
+            {
+                return string.Empty;
+            }
+
             pathBuilder = new StringBuilder(line.Length);
 
             if (char.IsLetterOrDigit(line[position]))
@@ -40,15 +53,29 @@ namespace HocEye.Core
 
             }
             
-            return InnerConstructPathBackwards(line, position, pathBuilder);
+            return InnerConstructPathBackwards(lines, position, pathBuilder);
             
         }
 
-     
-
-        internal string GetWord(string line, int position,int endIndex)
+        private string GetCurrentLine(IEnumerator<string> lines)
         {
+            if (lines.Current == null)
+            {
+                if (lines.MoveNext())
+                {
+                    return lines.Current;
+                }
 
+                return string.Empty;
+            }
+
+            return lines.Current;
+        }
+
+
+        internal string GetWord(string line , int position,int endIndex)
+        {
+            
             if (endIndex <= 0)
             {
                 return string.Empty;
@@ -92,15 +119,37 @@ namespace HocEye.Core
             return GetWord(line, position, endIndex);
         }
 
-        private string InnerConstructPathBackwards(string line, int position, StringBuilder pathBuilder)
+        private string InnerConstructPathBackwards(IEnumerator<string> lines , int position, StringBuilder pathBuilder)
         {
 
-            if (position <= 0)
+            position = RemoveWhiteSpace(lines.Current, position);
+
+            if (position < 0)
             {
+                if (lines.MoveNext())
+                {
+
+                    return InnerConstructPathBackwards(lines, lines.Current.Length - 1, pathBuilder);
+                }
+                //Id there is no more lines to process, the task is completed.
                 return pathBuilder.ToString();
             }
 
-            var word = GetWord(line, position,position);
+            if (VALUE_INDICATORS.Contains(lines.Current[position]))
+            {
+                //The cursor is on a value, nothing to display
+
+                return string.Empty;
+            }
+
+            if (PATH_SAPARATORS.Contains(lines.Current[position]))
+            {
+                //Id the current char is '{' or '}' the path require no more processing by the Path Constructor
+
+                return pathBuilder.ToString();
+            }
+
+            var word = GetWord(lines.Current, position,position);
 
             if (!String.IsNullOrEmpty(word))
             {
@@ -109,13 +158,23 @@ namespace HocEye.Core
                 pathBuilder.Insert(0, $"{word}.");
 
 
-                //Todo: handle where just '}' left    
-                return InnerConstructPathBackwards(line,nextPosition,pathBuilder);
+                return InnerConstructPathBackwards(lines,nextPosition,pathBuilder);
             }
 
             return pathBuilder.ToString();
             
             
+        }
+
+        private int RemoveWhiteSpace(string line, int position)
+        {
+            while (position > 0 && Char.IsWhiteSpace(line, position))
+            {
+                position --;
+            }
+            
+            return position;
+        
         }
     }
 }
