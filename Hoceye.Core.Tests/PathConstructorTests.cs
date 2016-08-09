@@ -17,16 +17,16 @@ namespace Hoceye.Core.Tests
     {
 
         [Test(Description = "Validate simple path construction, when the all the path elements exist in the same line")]
-        [TestCase(" application.prod.resources.mongo.connection", "application", 5)]
-        [TestCase("application.prod.resources.mongo.connection", "application.prod.resources.mongo", 29)]
-        [TestCase("application.prod.resources.mongo.connection{", "application.prod.resources.mongo", 29)]
-        [TestCase("application.prod.resources.mongo.connection{", "application.prod.resources.mongo.connection", 40)]
-        [TestCase("application.prod.resources.mongo.connection:", "application.prod.resources.mongo.connection", 40)]
-        [TestCase("application.prod.resources.mongo.connection", "application", 5)]
-        [TestCase("{application.prod.resources.mongo.connection", "application", 5)]
-        [TestCase("..............", "", 5)]
-        [TestCase("}", "", 0)]
-        public void When_Constucting_Elment_Path(string rawLine, string excpectedPath, int position)
+        [TestCase(" application.prod.resources.mongo.connection",5, "application")]
+        [TestCase("application.prod.resources.mongo.connection", 29,"application.prod.resources.mongo")]
+        [TestCase("application.prod.resources.mongo.connection{", 29,"application.prod.resources.mongo")]
+        [TestCase("application.prod.resources.mongo.connection{", 40,"application.prod.resources.mongo.connection")]
+        [TestCase("application.prod.resources.mongo.connection:",40 ,"application.prod.resources.mongo.connection")]
+        [TestCase("application.prod.resources.mongo.connection",5 ,"application")]
+        [TestCase("{application.prod.resources.mongo.connection", 5,"application")]
+        [TestCase("..............", 5,"")]
+        [TestCase("}",0, "")]
+        public void When_Constucting_Elment_Path(string rawLine, int position, string excpectedPath)
         {
             //Act
 
