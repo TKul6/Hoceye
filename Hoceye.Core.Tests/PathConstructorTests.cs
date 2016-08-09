@@ -8,32 +8,33 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Hoceye.Core.Tests
 {
     [TestFixture(Author = "Tomer K", Category = "Hoceye.Core")]
     public class PathConstructorTests
     {
-     
+
         [Test(Description = "Validate simple path construction, when the all the path elements exist in the same line")]
         [TestCase(" application.prod.resources.mongo.connection", "application", 5)]
-        [TestCase("application.prod.resources.mongo.connection", "application.prod.resources.mongo",29)]
-        [TestCase("application.prod.resources.mongo.connection{", "application.prod.resources.mongo",29)]
-        [TestCase("application.prod.resources.mongo.connection{", "application.prod.resources.mongo.connection",40)]
-        [TestCase("application.prod.resources.mongo.connection:", "application.prod.resources.mongo.connection",40)]
-        [TestCase("application.prod.resources.mongo.connection", "application",5)]
+        [TestCase("application.prod.resources.mongo.connection", "application.prod.resources.mongo", 29)]
+        [TestCase("application.prod.resources.mongo.connection{", "application.prod.resources.mongo", 29)]
+        [TestCase("application.prod.resources.mongo.connection{", "application.prod.resources.mongo.connection", 40)]
+        [TestCase("application.prod.resources.mongo.connection:", "application.prod.resources.mongo.connection", 40)]
+        [TestCase("application.prod.resources.mongo.connection", "application", 5)]
         [TestCase("{application.prod.resources.mongo.connection", "application", 5)]
-        [TestCase("..............", "",5)]
+        [TestCase("..............", "", 5)]
         [TestCase("}", "", 0)]
         public void When_Constucting_Elment_Path(string rawLine, string excpectedPath, int position)
         {
             //Act
-            
+
             var constructor = new PathConstructor();
-            
+
             //Act
 
-            var lines = new[] {rawLine};
+            var lines = new[] { rawLine };
 
             var pathResult = constructor.ConstructPathBackwards(lines.Reverse().GetEnumerator(), position);
 
@@ -44,7 +45,7 @@ namespace Hoceye.Core.Tests
         }
 
         [Test(Description = "Validate getting the first name in the path")]
-        [TestCase("application.prod.resources.mongo.connection", 28, "mongo")]  
+        [TestCase("application.prod.resources.mongo.connection", 28, "mongo")]
         [TestCase("application.prod.resources.mongo.connection{", 40, "connection")]
         [TestCase("application.prod.resources.mongo.connection:", 40, "connection")]
         [TestCase("application.prod.resources.mongo.connection", 40, "connection")]
@@ -55,9 +56,9 @@ namespace Hoceye.Core.Tests
         {
 
             var constructor = new PathConstructor();
-            
+
             //Act
-            
+
             var result = constructor.GetWord(expression, position);
 
             //Assert
@@ -65,22 +66,45 @@ namespace Hoceye.Core.Tests
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 
-        [Ignore("will be unignored after I'll fix the other tests")]
+
         [Test(Description = "Verify the PathConstructor can handle multiline path")]
- 
-        public void When_Construting_Multiline_Path(IEnumerator<string> lines, int position, string expectedResult)
+        [TestCaseSource("ProvideLines")]
+        public void When_Construting_Multiline_Path(string [] lines, int position, string excpectedPath)
         {
-        //    //Act
+            //Act
 
-        //    var constructor = new PathConstructor();
+            var constructor = new PathConstructor();
 
-        //    //Act
+            //Act
 
-        //    var pathResult = constructor.ConstructPathBackwards(rawLine, position);
+            var linesEnumerator = lines.Reverse().GetEnumerator();
 
-        //    //Assert
+            var pathResult = constructor.ConstructPathBackwards(linesEnumerator, position);
 
-        //    Assert.That(pathResult, Is.EqualTo(excpectedPath));
+            //Assert
+
+            Assert.That(pathResult, Is.EqualTo(excpectedPath));
         }
+
+        public static IEnumerable<object[]> ProvideLines()
+        {
+
+            yield return
+                    new object[] {new[] { "{application.prod", ".resources.mongo.connection" },12,
+                        "application.prod.resources.mongo"};
+            yield return
+                new object[] { new[] { "{application.prod.resources", ".mongo.connection{" },4,
+                    "application.prod.resources.mongo"};
+            yield return
+                new object[]{new[] { "{application.prod.resources.", "mongo.connection{" },10,
+                    "application.prod.resources.mongo.connection"};
+            yield return
+                new object[]
+                {
+                    new[] {"{application", ".prod.resources.mongo.connection:"},25,
+                    "application.prod.resources.mongo.connection"
+                };
+            
+        } 
     }
 }

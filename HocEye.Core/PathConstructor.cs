@@ -76,11 +76,11 @@ namespace HocEye.Core
         internal string GetWord(string line , int position,int endIndex)
         {
             
-            if (endIndex <= 0)
+            if (endIndex <= 0 || ELEMENTS_SAPARATORS.Contains(line[endIndex])) 
             {
                 return string.Empty;
             }
-            
+           
             var startIndex = line.LastIndexOfAny(ELEMENTS_SAPARATORS, position - 1, position) + 1;
 
 
@@ -151,19 +151,16 @@ namespace HocEye.Core
 
             var word = GetWord(lines.Current, position,position);
 
+            var nextPosition = position - Math.Max(word.Length,1);
+
             if (!String.IsNullOrEmpty(word))
             {
-                var nextPosition = Math.Max(position - word.Length - 1, 0);
-                
                 pathBuilder.Insert(0, $"{word}.");
-
-
-                return InnerConstructPathBackwards(lines,nextPosition,pathBuilder);
             }
 
-            return pathBuilder.ToString();
-            
-            
+            return InnerConstructPathBackwards(lines, nextPosition, pathBuilder);
+
+
         }
 
         private int RemoveWhiteSpace(string line, int position)
