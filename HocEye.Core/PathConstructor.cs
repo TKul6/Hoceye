@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Text.Differencing;
 
 namespace HocEye.Core
 {
-    public class PathConstructor
+    public class PathConstructor : IPathConstructor
     {
 
         private readonly char[] PATH_SAPARATORS;
