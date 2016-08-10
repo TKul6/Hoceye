@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HocEye.Core;
 using Moq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
@@ -38,10 +39,8 @@ namespace Hoceye.Core.Tests
             var hoconConfig = retriever.GetHoconObject(enumerator, IRRELEVAENT_INT);
 
             //Assert
-
-            Assert.That(hoconConfig.Name,Is.EqualTo("key"));
-
-            Assert.That(hoconConfig.Value.Value<int>(),Is.EqualTo(6));
+         
+            Assert.That(hoconConfig, Is.EqualTo("key : 6"));
 
 
         }

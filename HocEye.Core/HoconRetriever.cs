@@ -17,14 +17,14 @@ namespace HocEye.Core
             _rootElement = ConfigurationFactory.ParseString(hocon);
         }
 
-        public JProperty GetHoconObject(IEnumerator<string> enumerator, int position)
+        public string GetHoconObject(IEnumerator<string> enumerator, int position)
         {
             var path = _pathConstructor.ConstructPathBackwards(enumerator, position);
 
             var value =  _rootElement.GetValue(path);
 
-            return new JProperty(path,value.ToString(2));
-            
+            return $"{path} : {value}";
+
 
         }
     }
