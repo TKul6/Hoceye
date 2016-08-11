@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HocEye.Core;
 using Moq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Hoceye.Core.Tests
 {
@@ -19,15 +14,17 @@ namespace Hoceye.Core.Tests
         private const int IRRELEVAENT_INT = -1;
 
         [Test(Description = "Test getting hocon single value with simple path")]
-        public void When_Getting_Value()
+        [TestCaseSource("ProvideData")]
+        public void When_Getting_Value(string hocon,string path, string expectedResult)
         {
             //Arrange 
+            
+            IEnumerator<string> enumerator = (new[] {hocon}).AsEnumerable().GetEnumerator();
 
-            string hocon = @"{key: 6}";
+            var pathConstructorMock = new Mock<IPathConstructor>();
 
-            IEnumerator<string> enumerator = (new string[] {hocon}).AsEnumerable().GetEnumerator();
-
-            var pathConstructorMock = GetPathConstructorMock();
+            pathConstructorMock.Setup(
+                ctor => ctor.ConstructPathBackwards(enumerator, IRRELEVAENT_INT)).Returns(path);
 
             var retriever = new HoconRetriever(hocon,pathConstructorMock.Object);
             
@@ -37,46 +34,29 @@ namespace Hoceye.Core.Tests
 
             //Assert
          
-            Assert.That(hoconConfig, Is.EqualTo("key : 6"));
+            Assert.That(hoconConfig, Is.EqualTo(expectedResult));
 
 
         }
 
-        [Test(Description = "Testing getting hocon ovject with simple path")]
-        public void When_Getting_Simple_Object()
+
+        public static IEnumerable<ITestCaseData> ProvideData()
         {
-            //Arrange
+            yield return new TestCaseData("{key: 6}","key", "key : 6").SetDescription("Test getting hocon single value with simple path");
 
-            string hocon = @"{key : { 'paramName1' : 6, 'param2' : 7}}";
-
-            var enumerator = (new[] { hocon }).AsEnumerable().GetEnumerator();
-
-            var pathCtorMock = GetPathConstructorMock();
-
-            var retriever = new HoconRetriever(hocon,pathCtorMock.Object);
-
-            //Act
-
-            var result = retriever.GetHoconObject(enumerator, IRRELEVAENT_INT);
-
-            //Assert
-
-            var excpectedResult = @"key : {
+            yield return new TestCaseData("{key : { 'paramName1' : 6, 'param2' : 7}}","key", @"key : {
   'paramName1' : 6
   'param2' : 7
-}";
+}").SetDescription("Testing getting hocon ovject with simple path");
 
-            Assert.That(result,Is.EqualTo(excpectedResult));
-        }
+            yield return new TestCaseData("{key : { 'paramName1' : 6, 'innerObject' : {'MyParam' : 7}}}", "key", @"key : {
+  'paramName1' : 6
+  'innerObject' : {
+    'MyParam' : 7
+  }
+}").SetDescription("Testing getting hocon ovject with simple path");
 
-        private Mock<IPathConstructor> GetPathConstructorMock()
-        {
-            var pathConstructorMock = new Mock<IPathConstructor>();
 
-            pathConstructorMock.Setup(
-                ctor => ctor.ConstructPathBackwards(It.IsAny<IEnumerator<string>>(), IRRELEVAENT_INT)).Returns("key");
-
-            return pathConstructorMock;
-        }
+        }  
     }
 }
