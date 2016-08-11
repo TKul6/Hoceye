@@ -54,7 +54,7 @@ namespace Hoceye.Core.Tests
   'innerObject' : {
     'MyParam' : 7
   }
-}").SetDescription("Testing getting hocon ovject with simple path");
+}").SetDescription("Testing getting hocon object with simple path");
 
 
         }  
