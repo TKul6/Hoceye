@@ -56,6 +56,20 @@ namespace Hoceye.Core.Tests
   }
 }").SetDescription("Testing getting hocon object with simple path");
 
+            yield return new TestCaseData(@"{key : { 
+                                        'paramName1' : 6, 
+                                        'innerObject' : {'MyParam' : 7}}
+                                        key = {'anotherParam' :8}}", "key", @"key : {
+  'paramName1' : 6
+  'innerObject' : {
+    'MyParam' : 7
+  }
+  'anotherParam' : 8
+}").SetDescription("Test gettig a merged object with simple path");
+
+
+
+
 
         }  
     }
