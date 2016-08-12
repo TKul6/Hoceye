@@ -155,7 +155,14 @@ namespace HocEye.Core
 
             if (!String.IsNullOrEmpty(word))
             {
-                pathBuilder.Insert(0, $"{word}.");
+                if (pathBuilder.Length > 0)
+                {
+                    pathBuilder.Insert(0, $"{word}.");
+                }
+                else
+                {
+                    pathBuilder.Insert(0,word);
+                }
             }
 
             return InnerConstructPathBackwards(lines, nextPosition, pathBuilder);
