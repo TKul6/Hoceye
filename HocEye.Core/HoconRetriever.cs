@@ -29,7 +29,7 @@ namespace HocEye.Core
 
             var value =  _rootElement.GetValue(path);
 
-            return $"{path} : {value}";
+            return $"{path} : {value.ToString(path.Length)}";
 
 
         }
