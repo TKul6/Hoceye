@@ -61,10 +61,17 @@ namespace Hoceye.Extension
             var hocon = _hoconRetriever.GetHoconObject(lines, subjectTriggerPoint.Value.Position);
 
 
-            quickInfoContent.Add(hocon);
+            if (!String.IsNullOrEmpty(hocon))
+            {
+                quickInfoContent.Add(hocon);
 
-            applicableToSpan = subjectTriggerPoint.Value.Snapshot.CreateTrackingSpan(triggerPoint.Position, 5,
-                SpanTrackingMode.EdgeInclusive);
+                applicableToSpan = subjectTriggerPoint.Value.Snapshot.CreateTrackingSpan(triggerPoint.Position, 5,
+                    SpanTrackingMode.EdgeInclusive);
+            }
+            else
+            {
+                applicableToSpan = null;
+            }
         }
     }
 }

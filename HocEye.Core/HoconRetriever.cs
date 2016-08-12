@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Akka.Configuration;
 using Newtonsoft.Json.Linq;
 
@@ -20,6 +21,11 @@ namespace HocEye.Core
         public string GetHoconObject(IEnumerator<string> enumerator, int position)
         {
             var path = _pathConstructor.ConstructPathBackwards(enumerator, position);
+
+            if (String.IsNullOrEmpty(path))
+            {
+                return String.Empty;
+            }
 
             var value =  _rootElement.GetValue(path);
 
