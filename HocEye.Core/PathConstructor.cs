@@ -20,7 +20,7 @@ namespace HocEye.Core
         {
             PATH_SAPARATORS = new[] { '{', '}', };
 
-            ELEMENTS_SAPARATORS = new[] { ':', '{', '}', '=', '.',' ' };
+            ELEMENTS_SAPARATORS = new[] { ':', '{', '}', '=', '.',' ','\t' };
 
             VALUE_INDICATORS = new[] {':', '='};
         }
